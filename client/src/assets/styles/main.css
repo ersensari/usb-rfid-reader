@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  background-image: radial-gradient(
+    hsla(233.33 27.273% 12.941%/0.2) 0.5px,
+    hsla(0 0% 90%/1) 0.5px
+  );
+  background-size: 5px 5px;
+}

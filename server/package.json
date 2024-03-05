@@ -1,0 +1,25 @@
+{
+  "name": "rfid",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@serialport/parser-ready": "^12.0.0",
+    "cors": "^2.8.5",
+    "dayjs": "^1.11.10",
+    "express": "^4.18.3",
+    "nodemon": "^3.1.0",
+    "serialport": "^12.0.0",
+    "ws": "^8.16.0"
+  },
+  "optionalDependencies": {
+    "bufferutil": "^4.0.8",
+    "utf-8-validate": "^6.0.3"
+  }
+}

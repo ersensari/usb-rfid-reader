@@ -1,16 +1,18 @@
 {
-  "name": "rfid",
+  "name": "rfid-fitting-room-visibility",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "It makes to visible the garments in fitting room ",
+  "main": "server/index.js",
+  "workspaces": [
+    "server",
+    "client"
+  ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon index.js"
+    "start": "concurently \"npm:start -w server\" \"npm:start -w client\""
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "nodemon": "^3.1.0",
-    "serialport": "^12.0.0"
+    "concurrently": "^8.2.2"
   }
 }
