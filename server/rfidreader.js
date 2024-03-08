@@ -45,7 +45,7 @@ class RFIDReader {
 
                     if (tagList.length > 0)
                         this.EPCs = this.EPCs.map(x => {
-                            if (!tagList.includes(x.epc) && dayjs(new Date()).diff(x.lastSeen, 'minutes') > 1)
+                            if (!tagList.includes(x.epc) && Math.abs(dayjs(new Date()).diff(x.lastSeen, 'seconds')) > 5)
                                 return null
                             return x
                         }).filter(x => x)

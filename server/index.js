@@ -1,13 +1,13 @@
 const express = require('express')
+const expressWs = require('express-ws')
 const cors = require('cors')
 const { resolve } = require('node:path')
 const cluster = require('node:cluster')
 const { cpus } = require('node:os')
-const totalCPUs = cpus().length
+const totalCPUs = 1//cpus().length
 const { RFIDReader } = require('./rfidreader')
 const dayjs = require('dayjs')
-
-const WebSocket = require('ws')
+const productInfo = require('./productInfo.js')
 
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0
 
@@ -15,6 +15,9 @@ process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0
 if (cluster.isPrimary) {
     console.log(`Number of CPUs is ${totalCPUs}`)
     console.log(`Master ${process.pid} is running`)
+    productInfo.init().then(() => {
+        console.log('Product info loaded');
+    })
 
     const rfidReader = new RFIDReader()
     // Fork workers.
@@ -53,7 +56,9 @@ if (cluster.isPrimary) {
         optionSuccessStatus: 200,
     }
 
-    const app = express() // create express app
+    const wss = expressWs(express())
+    const app = wss.app
+
     app.use(cors(corsOptions))
     app.use(express.urlencoded({ extended: true }))
     app.use(express.json({ limit: '5mb' })) // parse requests of content-type - application/json
@@ -88,39 +93,29 @@ if (cluster.isPrimary) {
      * @param {Array} epcs 
      */
     const calculateTags = (epcs) => {
-        const tags = epcs.filter(x => dayjs(x.lastSeen).diff(x.firstSeen, 'minutes') <= 1)
+        const tags = epcs.filter(x => Math.abs(dayjs(x.lastSeen).diff(x.firstSeen, 'minutes')) <= 1)
         return tags
     }
 
     app.get('/api/epcs', async (req, res, next) => {
         const epcs = await getEpcs()
-        res.json(calculateTags(epcs)).status(200)
+        const calculatedEpcs = calculateTags(epcs)
+        const products = await productInfo.getProducts(calculatedEpcs)
+        
+        res.json(products).status(200)
     })
 
+    app.ws('/ws', function () { });
 
-    const wss = new WebSocket.WebSocketServer({ noServer: true });
-
-    wss.on('connection', (ws) => {
-        ws.on('error', console.error);
-        ws.on('message', (data) => {
-            console.log('received: %s', data);
+    setInterval(() => {
+        wss.getWss('/ws').clients.forEach(async (client) => {
+            const epcs = await getEpcs()
+            const calculatedEpcs = calculateTags(epcs)
+            const products = await productInfo.getProducts(calculatedEpcs)
+            console.log(products);
+            client.send(JSON.stringify(products));
         });
-
-        setInterval(() => {
-            wss.clients.forEach(async (client) => {
-                if (client !== ws && client.readyState === WebSocket.OPEN) {
-                    const epcs = await getEpcs()
-                    client.send(calculateTags(epcs));
-                }
-            });
-        }, 1000);
-    });
-
-    app.on('upgrade', (req, socket, head) => {
-        wss.handleUpgrade(req, socket, head, (ws) => {
-            wss.emit('connection', ws, req)
-        })
-    })
+    }, 1000);
 
     // start express server on port 8080
     app.listen(8080, () => {

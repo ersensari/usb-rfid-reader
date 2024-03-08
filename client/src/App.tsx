@@ -1,7 +1,6 @@
 import { useEffect } from 'react'
 import Layout from './Layout'
-import ContentWrapper from './components/ContentWrapper'
-import Filters from './components/Filters'
+import Dashboard from './components/Dashboard'
 import Loader from './components/Loader'
 import { useAppSelector } from './redux/hooks'
 
@@ -14,8 +13,7 @@ function App() {
     <>
       {loading && <Loader />}
       <Layout>
-        <Filters />
-        <ContentWrapper />
+        <Dashboard />
       </Layout>
     </>
   )

@@ -1,2 +1,1 @@
-RFID Inventory Visibility 
-BOH POC
+Zippedi csv file uploader

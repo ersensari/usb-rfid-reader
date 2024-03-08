@@ -2,11 +2,11 @@
   "name": "rfid-fitting-room-visibility",
   "displayName": "RFID Fitting Room Visibility",
   "private": true,
-  "version": "1.4.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "start": "node --max_old_space_size=4096 ./node_modules/vite/bin/vite.js",
-    "build": "node --max_old_space_size=4096 ./node_modules/vite/bin/vite.js build",
+    "start": "node --max_old_space_size=4096 ../node_modules/vite/bin/vite.js --host",
+    "build": "node --max_old_space_size=4096 ../node_modules/vite/bin/vite.js build",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
@@ -20,6 +20,7 @@
     "react-dom": "^18.2.0",
     "react-redux": "^8.0.5",
     "react-select": "^5.7.4",
+    "react-use-websocket": "^4.8.1",
     "react-usestateref": "^1.0.8",
     "usehooks-ts": "^2.9.1",
     "xlsx": "^0.18.5"
@@ -45,7 +46,7 @@
     "autoprefixer": "^10.4.14",
     "compression": "^1.7.4",
     "cross-env": "^7.0.3",
-    "daisyui": "^2.51.6",
+    "daisyui": "^4.7.2",
     "eslint": "^8.38.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-react-hooks": "^4.6.0",

@@ -8,11 +8,11 @@
     "client"
   ],
   "scripts": {
-    "start": "concurently \"npm:start -w server\" \"npm:start -w client\""
+    "start": "concurrently \"npm:start -w server\" \"npm:start -w client\""
   },
   "author": "",
   "license": "ISC",
-  "dependencies": {
+  "devDependencies": {
     "concurrently": "^8.2.2"
   }
 }

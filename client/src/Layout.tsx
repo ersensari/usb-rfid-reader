@@ -5,8 +5,8 @@ interface Props {
 }
 const Layout = (props: Props) => {
   return (
-    <div className="container mx-auto">
-      <Navbar />
+    <div className="w-full">
+      {/* <Navbar /> */}
       {props.children}
     </div>
   )
