@@ -1,14 +1,14 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
-
+import Logo from '/logo.svg'
 type Product =
   {
     keycode: string
     department: string
     name: string
     barcode: string
+    image: string
     epc: string
-    isApparel: boolean
   }
 
 
@@ -21,6 +21,13 @@ const Dashboard = () => {
     reconnectAttempts: 1000,
     shouldReconnect: (_closeEvent) => true,
   })
+
+  const getImageUrl = useCallback((product: Product) => {
+    return product.image
+      ? `https://kmartau.mo.cloudinary.net/${product.image}?tx=w_600,h_600`
+      : Logo;
+  }, [epcs])
+
 
   useEffect(() => {
     if (lastMessage !== null) {
@@ -46,25 +53,30 @@ const Dashboard = () => {
 
   return (
     <div className="m-2 flex flex-col gap-4">
-      <div className="flex gap-4 border border-gray-300 rounded-lg bg-white items-center p-4">
-        <div className='w-8'>
-          {connStatus}
+      <div className="flex justify-between border border-gray-300 rounded-lg bg-white items-center p-4">
+        <div className="flex gap-4 items-center">
+          <div className='w-8'>
+            {connStatus}
+          </div>
+          <div className='font-bold text-6xl'>
+            TOTAL PRODUCTS : {epcs.length}
+          </div>
         </div>
-        <div className='font-bold text-6xl'>
-          TOTAL PRODUCTS : {epcs.length}
+        <div className="m-2">
+          <img src={Logo} alt="Kmart" className="w-36 h-auto" />
         </div>
       </div>
       <div className='mx-auto'>
         {epcs ? <ul className='gap-4 justify-center flex max-lg:flex-col text-base-content flex-wrap'>
-          {epcs.map(x => (<li key={x.epc} className="card w-80 bg-base-100 shadow-xl">
-            <figure><img src="https://daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg" alt="Shoes" /></figure>
+          {epcs.map(x => (<li key={x.epc} className="w-[240px] bg-base-100 shadow-xl card-compact rounded-lg">
+            <figure><img src={getImageUrl(x)} alt={x.name} className={`rounded-t-lg w-[240px] h-[240px] ${!x.image && 'opacity-25' }`} /></figure>
             <div className="card-body">
-              <h2 className="card-title">
+              <h2 className="card-title !text-lg">
                 {x.name}
               </h2>
               <div className="card-actions justify-end">
                 <div className="badge badge-outline">{x.keycode}</div>
-                <div className="badge badge-outline">{x.department}</div>
+                <div className="badge badge-outline !justify-start text-ellipsis text-nowrap overflow-hidden">{x.department}</div>
               </div>
             </div>
           </li>))}

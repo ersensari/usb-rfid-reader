@@ -15,10 +15,6 @@ process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0
 if (cluster.isPrimary) {
     console.log(`Number of CPUs is ${totalCPUs}`)
     console.log(`Master ${process.pid} is running`)
-    productInfo.init().then(() => {
-        console.log('Product info loaded');
-    })
-
     const rfidReader = new RFIDReader()
     // Fork workers.
     for (let i = 0; i < totalCPUs; i++) {
@@ -31,10 +27,12 @@ if (cluster.isPrimary) {
         }
 
         if (msg.topic && msg.topic === 'GETEPCs') {
-            worker.send({
-                topic: 'GETEPCs',
-                epcs: rfidReader.EPCs
-            });
+            rfidReader.getActiveEpcs().then(epcs => {
+                worker.send({
+                    topic: 'GETEPCs',
+                    epcs
+                });
+            })
         }
     })
 
@@ -93,7 +91,7 @@ if (cluster.isPrimary) {
      * @param {Array} epcs 
      */
     const calculateTags = (epcs) => {
-        const tags = epcs.filter(x => Math.abs(dayjs(x.lastSeen).diff(x.firstSeen, 'minutes')) <= 1)
+        const tags = epcs.filter(x => Math.abs(dayjs(x.lastSeen).diff(x.firstSeen, 'minutes')) <= 15)
         return tags
     }
 
@@ -101,7 +99,7 @@ if (cluster.isPrimary) {
         const epcs = await getEpcs()
         const calculatedEpcs = calculateTags(epcs)
         const products = await productInfo.getProducts(calculatedEpcs)
-        
+
         res.json(products).status(200)
     })
 
@@ -112,7 +110,6 @@ if (cluster.isPrimary) {
             const epcs = await getEpcs()
             const calculatedEpcs = calculateTags(epcs)
             const products = await productInfo.getProducts(calculatedEpcs)
-            console.log(products);
             client.send(JSON.stringify(products));
         });
     }, 1000);
