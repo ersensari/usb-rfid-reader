@@ -4,7 +4,7 @@ const cors = require('cors')
 const { resolve } = require('node:path')
 const cluster = require('node:cluster')
 const { cpus } = require('node:os')
-const totalCPUs = 1//cpus().length
+const totalCPUs = cpus().length
 const { RFIDReader } = require('./rfidreader')
 const dayjs = require('dayjs')
 const productInfo = require('./productInfo.js')
@@ -91,7 +91,7 @@ if (cluster.isPrimary) {
      * @param {Array} epcs 
      */
     const calculateTags = (epcs) => {
-        const tags = epcs.filter(x => Math.abs(dayjs(x.lastSeen).diff(x.firstSeen, 'minutes')) <= 15)
+        const tags = epcs.filter(x => Math.abs(dayjs(x.lastSeen).diff(x.firstSeen, 'minutes')) <= 25)
         return tags
     }
 
