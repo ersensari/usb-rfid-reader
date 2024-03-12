@@ -8,7 +8,8 @@
     "client"
   ],
   "scripts": {
-    "start": "concurrently \"npm:start -w server\" \"npm:start -w client\""
+    "start": "concurrently \"npm:dev -w server\" \"npm:start -w client\"",
+    "pkg":"npm run build -w client && npm run pkg -w server"
   },
   "author": "",
   "license": "ISC",

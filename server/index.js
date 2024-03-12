@@ -59,9 +59,9 @@ if (cluster.isPrimary) {
 
     app.use(cors(corsOptions))
     app.use(express.urlencoded({ extended: true }))
-    app.use(express.json({ limit: '5mb' })) // parse requests of content-type - application/json
+    app.use(express.json({ limit: '15mb' })) // parse requests of content-type - application/json
     app.use(
-        express.static(resolve(__dirname, 'client', 'dist'), {
+        express.static(resolve(__dirname, 'frontend', 'dist'), {
             extensions: ['js'],
         })
     )
@@ -115,8 +115,9 @@ if (cluster.isPrimary) {
     }, 1000);
 
     // start express server on port 8080
-    app.listen(8080, () => {
-        console.log('http server started on port 8080')
+    const port = process.env.NODE_ENV == 'development' ? 8080 : 80
+    app.listen(port, () => {
+        console.log(`http server started on port ${port} `)
     })
 }
 

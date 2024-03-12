@@ -16,7 +16,7 @@ const Dashboard = () => {
 
   const [epcs, setEpcs] = useState<Product[]>([])
 
-  const { lastMessage, readyState } = useWebSocket('ws://rpizero.local:8080/ws', {
+  const { lastMessage, readyState } = useWebSocket(`ws://rpizero.local:${import.meta.env.DEV ? 8080 : 80}/ws`, {
     reconnectInterval: 1000,
     reconnectAttempts: 1000,
     shouldReconnect: (_closeEvent) => true,
@@ -69,7 +69,7 @@ const Dashboard = () => {
       <div className='mx-auto'>
         {epcs ? <ul className='gap-4 justify-center flex max-lg:flex-col text-base-content flex-wrap'>
           {epcs.map(x => (<li key={x.epc} className="w-[240px] bg-base-100 shadow-xl card-compact rounded-lg">
-            <figure><img src={getImageUrl(x)} alt={x.name} className={`rounded-t-lg w-[240px] h-[240px] ${!x.image && 'opacity-25' }`} /></figure>
+            <figure><img src={getImageUrl(x)} alt={x.name} className={`rounded-t-lg w-[240px] h-[240px] ${!x.image && 'opacity-25'}`} /></figure>
             <div className="card-body">
               <h2 className="card-title !text-lg">
                 {x.name}

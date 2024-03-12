@@ -7,7 +7,7 @@ class RFIDReader {
         this.rClient.connect().then(x => {
             console.log('Redis Client Connected');
         })
-        this.rcl
+        this.rClient.on('error', () => { throw new Error('Redis Client has not been connected') })
         this.EPCs = []
         // RFID serial port settings
         this.port = new SerialPort({

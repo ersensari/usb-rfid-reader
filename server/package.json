@@ -1,11 +1,13 @@
 {
-  "name": "rfid",
+  "name": "rfid-fitting-room-visibility-server",
   "version": "1.0.0",
   "description": "",
+  "bin": "index.js",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon --max_old_space_size=4096 index.js"
+    "dev": "NODE_ENV=development nodemon --max_old_space_size=4096 index.js",
+    "start":"sudo '$(which node)' --max_old_space_size=4096 index.js",
+    "pkg": "pkg ."
   },
   "author": "",
   "license": "ISC",
@@ -24,5 +26,18 @@
   "optionalDependencies": {
     "bufferutil": "^4.0.8",
     "utf-8-validate": "^6.0.3"
+  },
+  "resolutions": {
+    "pkg/pkg-fetch": "^3.2"
+  },
+  "pkg": {
+    "scripts": [
+      "index.js"
+    ],
+    "targets": [
+      "node18-linux-arm64"
+    ],
+    "outputPath": "../app",
+    "assets": "frontend/**/*"
   }
 }

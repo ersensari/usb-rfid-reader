@@ -6,9 +6,9 @@ export default defineConfig({
   plugins: [react({ plugins: [['@swc/plugin-styled-components', {}]] })],
   define: {
     APP_VERSION: `"${pkg.version}"`,
-    APP_TITLE: `"${pkg.displayName}"`,
+    APP_TITLE: `"${pkg.displayName}"`
   },
   build: {
-    outDir: './server/client/dist',
+    outDir: '../server/frontend/dist',
   },
 })
